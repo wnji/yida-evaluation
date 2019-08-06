@@ -1,0 +1,251 @@
+<% layout('/layouts/default.html', {title: '用户画像', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+
+			</div>
+
+		</div>
+
+
+		<div class="panel panel-info">
+			<div class="panel-body">
+				<img class="img-round" src="${ydeUser.photo}"> ${ydeUser.realName}(${ydeUser.yidaUserNo})同学&nbsp;&nbsp;&nbsp;${ydeUser.school}&nbsp;&nbsp;&nbsp;${ydeUser.className}
+			</div>
+		</div>
+
+
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					人才测评分析
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<div class="col-sm-12 col-md-offset-4 col-lg-offset-4col-xl-offset-4">测评套题数量</div>
+						<div class="col-sm-12">
+							<div class="progress">
+								<div class="progress-bar progress-bar-success" role="progressbar"
+									 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+									 style="width: ${notEvaluatedModulePercent}">
+                                    ${notEvaluatedModule}
+								</div>
+								<div class="progress-bar progress-bar-yellow" role="progressbar"
+									 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+									 style="width: ${evaluatedModulePercent}">
+									${ydeUser.evaluationModules}
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-offset-4 col-lg-offset-4col-xl-offset-4">
+							<div class="test-box notested"></div>&nbsp;未测 &nbsp;&nbsp;
+							<div class="test-box tested"></div>&nbsp;已测
+						</div>
+					</div>
+					<div class="col-sm-6  col-md-6 col-lg-6">
+						<br>
+						累计次数 <br><span style="font-weight: bold; ">${ydeUser.evaluationTimes==null?0:ydeUser.evaluationTimes}次</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					综合画像分析
+				</h3>
+			</div>
+			<div class="panel-body">
+
+                <%
+                 var countEvaluation = 0;
+                 for(evaluationReport in evaluationReports){  // for 1
+                    if(evaluationReport.report!=null){
+                      countEvaluation = countEvaluation + 1;
+                    }
+
+                    if(evaluationReport.report!=null && evaluationReport.evaluation.moduleId!=3 && evaluationReport.evaluation.moduleId!=4){ // if 1
+                %>
+
+				<div class="row result-row">
+					<label class="result-item">${evaluationReport.report.title}</label>
+
+					<%if(strutil.contain(evaluationReport.report.title, "心理年龄")){%>
+					   <label class="result-info-2">${evaluationReport.report.typeContent}</label>
+					<%
+					  }
+					  else{
+					%>
+					<label class="result-info-1">
+						${evaluationReport.report.typeContent}
+					</label>
+					<label class="result-info-2">${evaluationReport.report.boxContent}</label>
+					<%
+					  }
+					%>
+				</div>
+
+                <%
+                    } // if 1
+                 } // for 1
+                %>
+
+				<br>
+				<div id="main-chart" style="width: 800px;height:400px;"></div>
+
+			    <%
+			    // 情商模块
+			    for(evaluationReport in evaluationReports){  // for 21
+			      if(evaluationReport.report!=null && evaluationReport.evaluation.moduleId==4){ // if 21
+			    %>
+
+			    <div class="row result-row">
+			    	<label class="result-item">${evaluationReport.report.title}</label>
+
+			        <label class="result-info-2">${evaluationReport.report.typeContent}</label>
+		        </div>
+
+		        <%
+		            } // if 21
+		         } // for 21
+		        %>
+
+                <%
+                  if(countEvaluation < 1){
+                %>
+                <div class="row result-row">
+                    <label class="result-item">没有测评报告记录</label>
+                </div>
+                <%
+                  }
+                %>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+<% } %>
+
+<link rel="stylesheet" href="${ctxStatic}/common/circle.css">
+<style>
+	.img-round {
+		width: 50px;
+		height: 50px;
+		border-radius: 50%
+	}
+
+	.panel {
+		margin-left: 5px;
+		margin-right: 8px;
+	}
+
+	.test-box{
+		width: 10px;
+		height: 10px;
+        display: inline-block;
+	}
+	.notested{
+		background-color: rgb(0, 166, 90);
+	}
+	.tested{
+		background-color: #f39c12;
+	}
+
+	.result-row{
+		margin-left: 5px;
+		margin-top: 15px;
+	}
+
+	.result-item{
+		color: #3399CC;
+		width: 140px;
+	}
+
+	.result-info-1{
+		font-weight: bold;
+		margin-left: 30px;
+	}
+
+	.result-info-2{
+		font-weight: normal;
+		margin-left: 30px;
+	}
+
+	.circle-small{
+		top: -10px;
+		font-size: 40px;
+	}
+</style>
+
+<script src="${ctxStatic}/jslib/echarts/echarts.min.js"></script>
+<script>
+    var xAxisData = [];
+    var seriesData = [];
+
+    <%for(evaluationReport in evaluationReports){
+        if(evaluationReport.report!=null && evaluationReport.evaluation.moduleId==3 ) {
+     %>
+            xAxisData.push("${evaluationReport.report.title}");
+            seriesData.push(Math.ceil(${evaluationReport.report.score * 10 / evaluationReport.report.totalScore}));
+     <%
+        }
+      }
+     %>
+
+    var rotateDgree = 0;
+    if(xAxisData.length>4){
+        rotateDgree = 20;
+    }
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '软能力预测',
+            textStyle: {
+                color: '#3399CC',
+                fontFamily: 'Microsoft YaHei',
+				fontSize:14,
+                fontWeight: 'bold'
+            }
+
+        },
+        tooltip: {},
+
+        xAxis: {
+            type: 'category',
+            data: xAxisData,
+            axisLabel:{
+                interval: 0,
+                rotate: rotateDgree,
+                fontWeight:'normal'
+            }
+        },
+        yAxis: {
+           max: 10
+        },
+
+        series: [{
+           // name: '能力值',
+            type: 'bar',
+            itemStyle: {color: "#3AB1C6"},
+            barCategoryGap: "30%",
+            barWidth: '25%',
+            data: seriesData
+        }]
+    };
+
+    if (xAxisData.length > 0) {
+        var myChart = echarts.init(document.getElementById('main-chart'));
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+    else{
+        $("#main-chart").hide();
+    }
+</script>

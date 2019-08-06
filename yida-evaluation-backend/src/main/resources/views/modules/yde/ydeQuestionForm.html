@@ -1,0 +1,439 @@
+<% layout('/layouts/default.html', {title: '题目设置管理', libs: ['validate', 'ueditor']}){ %>
+<div class="main-content">
+    <div class="box box-main">
+        <div class="box-header with-border">
+            <div class="box-title">
+                <i class="fa fa-list-alt"></i> ${text(ydeQuestion.isNewRecord ? '新增题目设置' : '编辑题目设置')}
+            </div>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <#form:form id="inputForm" model="${ydeQuestion}" action="${ctx}/yde/ydeQuestion/save" method="post"
+        class="form-horizontal">
+        <div class="box-body">
+            <#form:hidden path="id"/>
+            <#form:hidden path="points"/>
+            <#form:hidden path="evaluationId" value="${ydeQuestion.evaluationId}"/>
+            <% if(part == "1") { %>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> ${text('所属部分')}：<i
+                                class="fa icon-question hide"></i></label>
+                        <div class="col-sm-8">
+                            <#form:select path="partId" items="${parts}" itemLabel="section" itemValue="id" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required">*</span> ${text('题号')}：<i
+                                class="fa icon-question hide"></i></label>
+                        <div class="col-sm-8">
+                            <#form:input path="no" maxlength="11" placeholder="请输题号" class="form-control digits required"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> ${text('题目')}：<i
+                                class="fa icon-question hide"></i></label>
+                        <div class="col-sm-8">
+                            <#form:ueditor path="question" maxlength="10000" height="100" class=""
+                            miniToolbars="true" readonly="false" outline="false"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> ${text('选项类型')}：<i
+                                class="fa icon-question hide"></i></label>
+                        <% if(ydeQuestion.isNewRecord) { %>
+                        <div class="col-sm-8">
+                            <#form:radio path="optionType" dictType="yde_option_type" onchange="optionChange()"
+                            class="form-control digits required" />
+                        </div>
+                        <% } else { %>
+                            <span class="col-sm-8 top-bottom-5">${@DictUtils.getDictLabel('yde_option_type', optionType, '')}</span>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div id="option-type" style="display: none;">
+                <div id="option-type-1" class="option-type-box">
+                    <div style="border: 1px dotted lightgrey; padding: 10px 0px">
+                        <div class="option-close hide"><a onclick="closeOption(this);"><i class="icon-close"></i></a>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" title="">
+                                        <strong class="option-name">${text('选项A')}：</strong></label>
+                                    <div class="col-sm-2">
+                                        <#form:input id="optionPoints_A" name="optionPoints" maxlength="11"
+                                        placeholder="请输入分值" class="form-control digits"/>
+                                    </div>
+                                    <div class="col-sm-1 top-bottom-5">
+                                        分
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <span class="col-sm-2"></span>
+                                    <div class="col-sm-8">
+                                        <#form:ueditor path="optionContent_A" maxlength="10000" height="60" class=""
+                                        miniToolbars="true" readonly="false" outline="false"/>
+                                    </div>
+                                    <span class="col-sm-2 btn-option-add">
+						                <a onclick="addOption();"><i class="fa fa-plus" style="font-size: 30px"></i></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="answer-type" style="display: none;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" title="">
+                                <span class="required hide">*</span> ${text('标准答案')}：<i class="fa icon-question hide"></i></label>
+                            <div class="col-sm-8">
+                                <#form:input path="answer" maxlength="11" placeholder="请输入标准答案"
+                                class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" title="">
+                                <span class="required hide">*</span> ${text('答题分值')}：<i class="fa icon-question hide"></i></label>
+                            <div class="col-sm-7">
+                                <#form:input id="points" maxlength="11" placeholder="请输入分值" value="${ydeQuestion.points}" class="form-control digits"/>
+                            </div>
+                            <div class="col-sm-1 top-bottom-5">
+                                分
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="yesno-type" style="display: none;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" title="">
+                                <strong class="option-name">${text('是')}：</strong></label>
+                            <div class="col-sm-2">
+                                <#form:input path="optionPointsYes" maxlength="11" placeholder="请输入分值"
+                                class="form-control digits"/>
+                            </div>
+                            <div class="col-sm-1 top-bottom-5">
+                                分
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" title="">
+                                <strong class="option-name">${text('否')}：</strong></label>
+                            <div class="col-sm-2">
+                                <#form:input path="optionPointsNo" maxlength="11" placeholder="请输入分值"
+                                class="form-control digits"/>
+                            </div>
+                            <div class="col-sm-1 top-bottom-5">
+                                分
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div id="allocation-type" style="display: none;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" title="">${text('总分')}：</label>
+                            <div class="col-sm-2">
+                                <#form:input id="points" maxlength="11" placeholder="请输入分值" value="${ydeQuestion.points}" class="form-control digits"/>
+                            </div>
+                            <div class="col-sm-1 top-bottom-5">
+                                分
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div style="border: 1px dotted lightgrey; padding: 10px 0px">
+                        <div class="option-close hide"><a onclick="closeOption(this);"><i class="icon-close"></i></a>
+                        </div>
+                        <div class="row allocation-type-box">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" title="">
+                                        <strong class="allocation-name">${text('选项A')}：</strong></label>
+                                    <div class="col-sm-8">
+                                        <#form:ueditor path="allocationContent_A" maxlength="10000" height="60" class=""
+                                        miniToolbars="true" readonly="false" outline="false"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row allocation-type-box">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" title="">
+                                        <strong class="allocation-name">${text('选项B')}：</strong></label>
+                                    <div class="col-sm-8">
+                                        <#form:ueditor path="allocationContent_B" maxlength="10000" height="60" class=""
+                                        miniToolbars="true" readonly="false" outline="false"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="options">
+        </div>
+        <% include('/modules/yde/template/ydeQuestionTemplate.html'){} %>
+        <div class="box-footer">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <% if (hasPermi('yde:ydeQuestion:edit')){ %>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i>
+                        ${text('保 存')}
+                    </button>&nbsp;
+                    <% } %>
+                    <button type="button" class="btn btn-sm btn-default" id="btnCancel"
+                            onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </#form:form>
+</div>
+</div>
+<% } %>
+<script>
+    let optionType = "${optionType}";
+    let optionStr = "${optionJson}";
+    let options = optionStr ? eval(unescape(optionStr)) : [];
+
+    function getOptionsJson(form) {
+        let $optionBox = $(form).find(".option-type-box");
+        let options = [];
+        for (let i = 0; i < $optionBox.length; i++) {
+            let name = String.fromCharCode(65+i);
+            let points = $optionBox.find("#optionPoints_"+name).val();
+            let ue = UE.getEditor("optionContent_" + name + "UE");
+            options.push({name: name, points: points, content: ue.getContent()});
+        }
+        return JSON.stringify(options);
+    }
+
+    function getAllocationJson(form) {
+        let $optionBox = $(form).find(".allocation-type-box");
+        let options = [];
+        for (let i = 0; i < $optionBox.length; i++) {
+            let name = String.fromCharCode(65+i);
+            let ue = UE.getEditor("allocationContent_" + name + "UE");
+            options.push({name: name, content: ue.getContent()});
+        }
+        return JSON.stringify(options);
+    }
+
+    $("#inputForm").validate({
+        submitHandler: function (form) {
+            let validationBox;
+            if (optionType == "1") {
+                validationBox = "option-type-box"
+            } else if(optionType == "2") {
+                validationBox = "answer-type"
+            } else if(optionType == "3") {
+                validationBox = "yesno-type"
+            } else if(optionType == "4") {
+                validationBox = "allocation-type"
+            }
+
+            let $inputs = $("." + validationBox).find("input");
+            for (let i = 0; i < $inputs.length; i++) {
+                if (!$($inputs[i]).val()) {
+                    js.showMessage("表单内容不完整，请检查", "注意", 'warning');
+                    return;
+                }
+            }
+
+            if (optionType == "1") {
+                $(form).find("input[name=options]").val(getOptionsJson(form));
+            } else if (optionType == "2") {
+                $(form).find("input[name=points]").val($("#answer-type").find("input#points").val());
+            } else if (optionType == "4") {
+                $(form).find("input[name=points]").val($("#allocation-type").find("input#points").val());
+                $(form).find("input[name=options]").val(getAllocationJson(form));
+            }
+            js.ajaxSubmitForm($(form), function (data) {
+                js.showMessage(data.message);
+                js.tabPage.getPrevTabPage().contents().find("#dataGrid").trigger("reloadGrid");
+                if (data.result == Global.TRUE) {
+                    js.closeCurrentTabPage(function (contentWindow) {
+                        contentWindow.page();
+                    });
+                }
+            }, "json");
+        }
+    });
+
+    $('input[name=optionType]').on('ifChecked', function (event) {
+        optionType = event.target.value;
+        optionChange();
+    });
+
+    function optionChange() {
+        if (optionType == "1") {
+            $("#answer-type").hide();
+            $("#yesno-type").hide();
+            $("#option-type").show();
+            $("#allocation-type").hide();
+        } else if (optionType == "2") {
+            $("#answer-type").show();
+            $("#option-type").hide();
+            $("#yesno-type").hide();
+            $("#allocation-type").hide();
+        } else if (optionType == "3") {
+            $("#yesno-type").show();
+            $("#option-type").hide();
+            $("#answer-type").hide();
+            $("#allocation-type").hide();
+        } else if (optionType == "4") {
+            $("#yesno-type").hide();
+            $("#option-type").hide();
+            $("#answer-type").hide();
+            $("#allocation-type").show();
+        }
+    }
+
+    function addOption(name, points, content) {
+        if(name == undefined){
+            name  = String.fromCharCode($(".option-type-box").length +  65);
+        }
+
+        let $option = $("#option-type-tpl").clone();
+        let optionHtml = $option[0].outerHTML.replace(/optionPoints_tpl/g, "optionPoints_" + name);
+        optionHtml = optionHtml.replace(/optionContent_tpl/g, "optionContent_" + name);
+        optionHtml = optionHtml.replace(/optionPoints_name/g, "optionPoints");
+        $option = $(optionHtml);
+        $option.addClass("option-type-box");
+        $option.find(".edui-editor").remove();
+        let count = $("#option-type .option-type-box").size();
+        $option.find(".control-label").html("<strong>选项" + String.fromCharCode(count + 65) + "：</strong>");
+        $option.find(".option-close").removeClass("hide");
+        $option.find("input[name=optionPoints]").val(points);
+        $option.removeAttr("id");
+        $option.show();
+        $("#option-type").append($option);
+        let ue = UE.getEditor('optionContent_' + name + "UE");
+        ue.ready(function () {
+            if(content){
+                ue.setContent(content);
+            }
+        });
+    }
+
+    function addAllocation(name, content) {
+        if(name == undefined){
+            name  = String.fromCharCode($(".allocation-type-box").length +  65);
+        }
+
+        let $option = $("#option-type-tpl").clone();
+        let optionHtml = $option[0].outerHTML;
+        optionHtml = optionHtml.replace(/allocationContent_tpl/g, "optionContent_" + name);
+        $option = $(optionHtml);
+        $option.addClass("allocation-type-box");
+        $option.find(".edui-editor").remove();
+        let count = $("#option-type .option-type-box").size();
+        $option.find(".control-label").html("<strong>选项" + String.fromCharCode(count + 65) + "：</strong>");
+        $option.removeAttr("id");
+        $option.show();
+        $("#option-type").append($option);
+        let ue = UE.getEditor('allocationContent_' + name + "UE");
+        ue.ready(function () {
+            ue.setContent(content);
+        });
+    }
+
+    function addYesNo() {
+        if (optionType == "3") {
+            $("#optionPointsYes").val(getOptionPoints(options, "是"));
+            $("#optionPointsNo").val(getOptionPoints(options, "否"));
+        }
+    }
+
+    function getOptionPoints(options, name) {
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].optionName == name) {
+                return options[i].points;
+            }
+        }
+        return 0;
+    }
+
+    function addOptions() {
+        if (optionType == "1") {
+            for (let i = 0; i < options.length; i++) {
+                let option = options[i];
+                if(i==0){
+                    $("#optionPoints_A").val(option.points);
+                    UE.getEditor('optionContent_AUE').setContent(option.content);
+                }else{
+                    addOption(option.optionName, option.points, option.content);
+                }
+            }
+        }
+    }
+
+    function closeOption(elem) {
+        $(elem).parents(".option-type-box").remove();
+        let $optionBox = $(form).find(".option-type-box");
+    }
+
+    function addAllocations() {
+        if (optionType == "4") {
+            UE.getEditor('allocationContent_AUE').setContent(options[0].content);
+            UE.getEditor('allocationContent_BUE').setContent(options[1].content);
+        }
+    }
+
+
+    $(function () {
+        UE.getEditor('optionContent_AUE').ready(function () {
+            addOptions();
+        });
+        UE.getEditor('allocationContent_AUE').ready(function () {
+            addAllocations();
+        });
+        addYesNo();
+        optionChange();
+    });
+</script>

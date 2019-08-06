@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>yida-evaluation</artifactId>
+        <groupId>com.yida</groupId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>yida-evaluation-backend</artifactId>
+
+    <packaging>war</packaging>
+
+    <name>yida-evaluation-backend</name>
+
+    <properties>
+
+        <finalName>yida-evaluation-backend</finalName>
+        <start-class>com.yida.modules.Application</start-class>
+        <eclipse-plugin-download-sources>false</eclipse-plugin-download-sources>
+        <eclipse-plugin-download-javadocs>false</eclipse-plugin-download-javadocs>
+
+    </properties>
+
+    <dependencies>
+
+        <!-- 核心模块 -->
+        <dependency>
+            <groupId>com.dashen</groupId>
+            <artifactId>a-dashen-core</artifactId>
+            <version>${dashen-framwork.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yida</groupId>
+            <artifactId>yida-evaluation-data</artifactId>
+            <version>${yida-evaluation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yida</groupId>
+            <artifactId>yida-evaluation-common</artifactId>
+            <version>${yida-evaluation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>standard-jdk</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../lib/tools.jar</exists>
+                </file>
+            </activation>
+            <properties>
+                <tools-jar>${java.home}/../lib/tools.jar</tools-jar>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>${finalName}</finalName>
+        <outputDirectory>${project.basedir}/src/main/webapp/WEB-INF/classes/</outputDirectory>
+        <plugins>
+
+            <!-- Spring Boot -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.0.6.RELEASE</version>
+            </plugin>
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin> -->
+
+            <!-- 打包插件, war包名称不带版本号 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+                    <packagingExcludes></packagingExcludes>
+                    <warSourceExcludes></warSourceExcludes>
+                    <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
+                    <warName>${finalName}</warName>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <!-- 加Start-Class否则服务器用WarLauncher启动不了 -->
+                        <manifestEntries>
+                            <!--Premain-Class为key，这个<Premain-Class>中的值为value -->
+                            <Start-Class>${start-class}</Start-Class>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-file</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <sourceFile>src/main/conf/application.yml.${env}</sourceFile>
+                                    <destinationFile>src/main/webapp/WEB-INF/classes/config/application.yml</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>src/main/conf/ueditor.json.${env}</sourceFile>
+                                    <destinationFile>src/main/webapp/WEB-INF/classes/config/ueditor.json</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>src/main/bin/appctrl.sh.${env}</sourceFile>
+                                    <destinationFile>target/yida-evaluation-backend/bin/appctrl.sh</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>src/main/bin/function.sh</sourceFile>
+                                    <destinationFile>target/yida-evaluation-backend/bin/function.sh</destinationFile>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/67599-release-TbuQg4/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/67599-snapshot-FV03mU/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>aliyun-repos</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>sonatype-repos-s</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-repos</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

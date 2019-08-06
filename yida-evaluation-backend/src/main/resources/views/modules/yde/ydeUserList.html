@@ -1,0 +1,98 @@
+<% layout('/layouts/default.html', {title: '测评画像', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('测评画像')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('yde:ydeUser:edit')){ %>
+					<a href="${ctx}/yde/ydeUser/form" class="btn btn-default btnTool" title="${text('新增用户表')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+					<a href="#" onclick="batchDelete();" class="btn btn-default"><i class="fa fa-trash"></i> 批量删除</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${ydeUser}" action="${ctx}/yde/ydeUser/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('姓名')}：</label>
+					<div class="control-inline">
+						<#form:input path="realName" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+			   <%
+			     if(sysUser.userType=='none'){%>
+				<div class="form-group">
+					<label class="control-label">${text('学校')}：</label>
+					<div class="control-inline">
+						<#form:input path="school" maxlength="128" class="form-control width-120"/>
+					</div>
+				</div>
+			  <%}%>
+				<div class="form-group">
+					<label class="control-label">${text('学届')}：</label>
+					<div class="control-inline">
+						<#form:input path="schoolYear" maxlength="16" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('专业')}：</label>
+					<div class="control-inline">
+						<#form:input path="majorName" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('班级')}：</label>
+					<div class="control-inline">
+						<#form:input path="className" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("姓名")}', name:'realName', index:'a.real_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/yde/ydeUser/form?id='+row.id+'" class="btnList" data-title="${text("编辑用户表")}">'+(val||row.yidaUserNo)+'</a>';
+		}},
+		{header:'${text("学校")}', name:'school', index:'a.school', width:150, align:"left"},
+		{header:'${text("学届")}', name:'schoolYear', index:'a.school_year', width:150, align:"left"},
+		{header:'${text("专业")}', name:'majorName', index:'a.major_name', width:150, align:"left"},
+		{header:'${text("班级")}', name:'className', index:'a.class_name', width:150, align:"left"},
+		{header:'${text("测评套题")}', name:'evaluationModules', index:'a.evaluation_modules', width:150, align:"center", formatter: function(val, obj, row, act){
+                return ''+(val||0);
+            }},
+        {header:'${text("累计次数")}', name:'evaluationTimes', index:'a.evaluation_times', width:150, align:"center", formatter: function(val, obj, row, act){
+                return ''+(val||0);
+            }},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+                actions.push('<a href="${ctx}/yde/ydeUser/evaluation/result?id='+row.id+'" class="btnList" title="${text("用户画像")}">用户画像</a>&nbsp;');
+			<% if(hasPermi('yde:ydeUser:edit')){ %>
+				actions.push('<a href="${ctx}/yde/ydeUser/form?id='+row.id+'" class="btnList" title="${text("编辑用户")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/yde/ydeUser/delete?id='+row.id+'" class="btnList" title="${text("删除用户")}" data-confirm="${text("确认要删除该用户吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+    rownumbers: false,
+    multiselect: false,
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

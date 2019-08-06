@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yida.modules.yde.dao.YdeEvaluationModulesDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="YdeEvaluationModules">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+	<select id="countEvaluation" resultType="int">
+		select count(id) from yde_evaluation where status=0 and is_enabled
+	</select>
+
+</mapper>

@@ -1,0 +1,337 @@
+<% layout('/layouts/default.html', {title: '测评设置管理', libs: ['validate', 'ueditor', 'dataGrid', 'tagsinput']}){ %>
+<link rel="stylesheet" href="${ctxStatic}/icheck/1.0/square/blue.css?${_version}">
+<div class="main-content">
+    <#form:form id="inputForm" model="${ydeEvaluation}" action="${ctx}/yde/ydeEvaluation/save" method="post" class="form-horizontal">
+    <div class="tab-content">
+        <div class="box-header with-border wizard">
+            <div class="row" style="display: block; height: 46px;">
+                <div class="col-xs-8" style="float: none;margin: auto;">
+                    <div class="col-sm-4" >
+                        <img src="${ctxStatic}/images/right-blue.png" class="wizard-box" style="z-index: 100">
+                        <div class="wizard-text"><a href="#tab-1" style="color: inherit;" data-toggle="tab" onclick="changeBtn(1);">1.测评编辑</a></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <img id="step2-blue" src="${ctxStatic}/images/right-blue.png" class="wizard-box" style="z-index: 51; display: none;">
+                        <img id="step2-grey" src="${ctxStatic}/images/right-grey.png" class="wizard-box" style="z-index: 50">
+                        <img src="${ctxStatic}/images/right-white.png" class="wizard-box wizard-box-white" style="z-index: 52">
+                        <div class="wizard-text"><a href="#tab-2" style="color: inherit;" data-toggle="tab" onclick="changeBtn(2);">2.题库设置</a></div>
+                    </div>
+                    <div class="col-sm-4">
+						<img id="step3-blue" src="${ctxStatic}/images/right-blue.png" class="wizard-box" style="z-index: 2; display: none;">
+						<img id="step3-grey" src="${ctxStatic}/images/right-grey.png" class="wizard-box" style="z-index: 1">
+                        <img src="${ctxStatic}/images/right-white.png" class="wizard-box wizard-box-white" style="z-index: 3">
+                        <div class="wizard-text"><a href="#tab-3" style="color: inherit;" data-toggle="tab" onclick="changeBtn(3);">3.评分规则及展现</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane ${step == '1' ? 'active' : ''}" id="tab-1">
+            <div class="box-body">
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> <strong>${text('测评名称')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="name" maxlength="100" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6 isMenu">
+						<div class="form-group">
+							<label class="control-label col-sm-4"><strong>测评图标：</strong></label>
+							<div class="col-sm-8">
+								<#form:iconselect path="icon" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> <strong>${text('所属测评模块')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="moduleId" items="${modules}" itemLabel="name" itemValue="id"
+								blankOption="true" blankOptionLabel="请选择所属测评模块" class="form-control required" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> <strong>${text('限定次数')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8 mt5 icheck">
+								<input type="checkbox" id="limitedOnce" name="limitedOnceBox" ${ydeEvaluation.limitedOnce=="1"?"checked":""}
+									   class="form-control" data-style="square-blue"> ${text('勾选则表示只能做一次，不勾选则表示无数次')}
+								<input type="hidden" name="limitedOnce" value='${ydeEvaluation.limitedOnce=="1"?"1":"0"}'>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required">*</span> <strong>${text('测评时长')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-7">
+								<#form:input path="duration" maxlength="11" placeholder="请输入测评时长 (分钟)" class="form-control digits required"/>
+							</div>
+							<div class="top-bottom-5 col-sm-1">分</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required">*</span> <strong>${text('显示状态')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:radio path="enabled" dictType="yde_enable_disable" class="form-control digits required" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> <strong>${text('测评背景内容')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:ueditor path="background" maxlength="10000" height="200" class=""
+                                miniToolbars="true" readonly="false" outline="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required">*</span> <strong>${text('是否分部分')}：</strong><i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:radio path="part" dictType="sys_yes_no" class="form-control required digits" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="part-group" style="display: none;">
+                    <div class="row part-box" part-no="1">
+                        <input type="hidden" name="part_id_1">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3" title="">
+                                    <strong>${text('第1部分')}：</strong></label>
+                                <div class="col-sm-8" style="margin-right: 0;">
+                                        <#form:ueditor id="part_box_1" name="part_box_1" maxlength="10000" height="200"
+                                        miniToolbars="true" readonly="false" outline="false"/>
+                                </div>
+                                <div class="col-sm-1">
+                                    <a class="btn-add-part" onclick="addPart(2)"><i class="fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+			</div>
+	    </div>
+        <div class="tab-pane ${step == '2' ? 'active' : ''}" id="tab-2">
+			<div class="box-body" style="height: 100%;">
+				<div class="row" style="display: block; height: 46px;">
+					<div class="col-sm-6 box-tools pull-left">
+						<a href="#" onclick="batchDelete();" class="btn btn-default"><i class="fa fa-trash"></i> 批量删除</a>
+						<a onclick="newQuestion();" class="btn btn-default"><i class="fa fa-plus"></i> ${text('新增')}</a>
+					</div>
+				</div>
+				<table id="dataGrid"></table>
+				<div id="dataGridPage"></div>
+			</div>
+		</div>
+		<!-- 3. 评分规则及展现 -->
+		<% include('/modules/yde/template/ydeRuleTemplate.html'){} %>
+    </div>
+    <div class="box-footer">
+        <div class="col-sm-12" style="text-align: center;">
+			<#form:hidden path="step"/>
+			<button type="submit" class="btn btn-sm btn-primary btn-step1" style="display:none;" onclick="$('#step').val(2);" title="保存并进入到下一步配置"><i class="fa fa-arrow-circle-right"></i> ${text('下一步')}</button>&nbsp;
+			<button type="button" class="btn btn-sm btn-default btn-step1" style="display:none;" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('返回')}</button>
+			<button type="submit" class="btn btn-sm btn-primary btn-step2" style="display:none;" onclick="$('#step').val('1');"><i class="fa fa-arrow-circle-left"></i> ${text('上一步')}</button>&nbsp;
+			<button type="submit" class="btn btn-sm btn-primary btn-step2" style="display:none;" onclick="$('#step').val('3');"><i class="fa fa-arrow-circle-right"></i> ${text('下一步')}</button>&nbsp;
+			<button type="submit" class="btn btn-sm btn-primary btn-step3" style="display:none;" onclick="$('#step').val('2');"><i class="fa fa-arrow-circle-left"></i> ${text('上一步')}</button>&nbsp;
+			<button type="submit" class="btn btn-sm btn-primary btn-step3" style="display:none;" onclick="$('#step').val('-1');"><i class="fa fa-check"></i> ${text('提交')}</button>&nbsp;
+        </div>
+    </div>
+    </#form:form>
+	<form id="searchForm" method="post" class="form-inline"></form>
+</div>
+<% } %>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/a-color-picker/dist/acolorpicker.js"></script>
+<script src="${ctxStatic}/js/rule.js"></script>
+<script>
+
+let ruleId = "${ruleId}";
+let ruleType = "${ruleType}";
+let reportType = "${reportType}";
+let step = '${step}';
+let rules = getJson('${rulesJson}');
+let parts = getJson('${partsJson}');
+
+function newQuestion() {
+	let url = "${ctx}/yde/ydeQuestion/form?evaluationId=" + $("#inputForm").find("input[name=id]").val();
+	js.addTabPage(null, "新建题目", url);
+}
+
+function getJson(str){
+    return str == "" ? [] : eval(unescape(str));
+}
+
+$(".btn-step"+ step).show();
+if(step == '2'){
+	$('#step2-blue').show();
+}else if(step == '3'){
+	$('#step2-blue').show();
+	$('#step3-blue').show();
+}
+
+function changeBtn(_step){
+	$(".btn-sm").hide();
+	$(".btn-step"+_step).show();
+}
+
+$("#inputForm").validate({
+	submitHandler: function(form){
+		$(".score-box").addClass("required");
+
+		if (ruleType == "1") {
+			$(form).find("input[name=ruleJson]").val(getScoreRuleJson(form));
+		} else if(ruleType == "2") {
+			let typeRuleJson = getTypeRuleJson(form);
+
+			$(form).find("input[name=ruleJson]").val(typeRuleJson);
+		}
+
+		if($(form).find(".checked input[name=part]").val() == "1"){
+            $(form).find("input[name=partsJson]").val(getPartsJson(form));
+        }
+
+		js.ajaxSubmitForm($(form), function(data){
+			if ($("#step").val() == '1') {
+				$('[href="#tab-1"]').click();
+				changeBtn(1);
+			}else if ($("#step").val() == '2') {
+				$('#step2-blue').show();
+				$('[href="#tab-2"]').click();
+				changeBtn(2);
+			}else if($("#step").val() == '3') {
+				$('#step3-blue').show();
+				$('[href="#tab-3"]').click();
+				changeBtn(3);
+			}
+
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				if ($("#step").val() == '-1') {
+					js.closeCurrentTabPage(function (contentWindow) {
+						contentWindow.page();
+					});
+				}
+				if(data.id) {
+					$(form).find("input[name=id]").val(data.id);
+				}
+			}
+		}, "json");
+    }
+});
+
+$("#ruleType").on('ifChecked', function(event) {
+	ruleType = event.target.value;
+	changeRuleType(ruleType);
+});
+
+$("#reportType").on('ifChecked', function(event) {
+	let reportType = event.target.value;
+	showReportType(reportType);
+});
+
+$("#part").on('ifChecked', function(event) {
+	let isPart = event.target.value;
+	if(isPart=="1"){
+		$("#part-group").show();
+	}else{
+		$("#part-group").hide();
+	}
+});
+
+function changeRuleType(ruleType){
+	if(ruleType == "1"){
+		$(".rule-type-score-sum").show();
+		$(".rule-type-group-sum").hide();
+	}else if(ruleType == "2"){
+		$(".rule-type-group-sum").show();
+		$(".rule-type-score-sum").hide();
+	}
+}
+
+$("input#limitedOnce").on('ifChecked', function(){
+	$("input[name=limitedOnce]").val(1);
+}).on('ifUnchecked', function(){
+	$("input[name=limitedOnce]").val(0);
+});
+
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+    url: "${ctx}/yde/ydeEvaluation/questions?evaluationId=${ydeEvaluation.id}",
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("题号")}', name:'no', index:'a.id', width:50, align:"center", frozen:true},
+		{header:'${text("所属部分")}', name:'section', index:'a.section', width:100, align:"left"},
+		{header:'${text("题目")}', name:'question', index:'a.question', width:180, align:"left"},
+		{header:'${text("选项内容")}', name:'optionStr', index:'a.option_str', width:150, align:"left", classes: "wrapping-cell"},
+		{header:'${text("A分/是")}', name:'pointA', index:'a.point_a', width:75, align:"center"},
+		{header:'${text("B分/否")}', name:'pointB', index:'a.point_b', width:75, align:"center"},
+		{header:'${text("C分")}', name:'pointC', index:'a.point_c', width:50, align:"center"},
+		{header:'${text("D分")}', name:'pointD', index:'a.point_d', width:50, align:"center"},
+		{header:'${text("E分")}', name:'pointE', index:'a.point_e', width:50, align:"center"},
+		{header:'${text("F分")}', name:'pointF', index:'a.point_f', width:50, align:"center"},
+		{header:'${text("标准答案")}', name:'answer', index:'a.answer', width:150, align:"center"},
+		{header:'${text("答题分值")}', name:'points', index:'a.points', width:80, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:100, sortable:false, title:false, formatter: function(val, obj, row, act){
+				var actions = [];
+			<% if(hasPermi('yde:ydeQuestion:edit')){ %>
+					actions.push('<a href="${ctx}/yde/ydeQuestion/form?id='+row.id+'" class="btnList" title="${text("修改")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/yde/ydeQuestion/delete?id='+row.id+'" class="btnList" title="${text("删除")}" data-confirm="${text("确认要删除该题目设置吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+				return actions.join('');
+			}}
+	],
+	rownumbers: false,
+	multiselect: true,
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+	}
+});
+
+// 初始化DataGrid对象
+$('#analysisGrid').dataGrid({
+	url: "${ctx}/yde/ydeEvaluation/analysis?evaluationId=${ydeEvaluation.id}",
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("类型1")}', name:'type1', index:'a.type1', width:100, align:"center", frozen:true},
+		{header:'${text("类型2")}', name:'type2', index:'a.type2', width:100, align:"center", frozen:true},
+		{header:'${text("类型3")}', name:'type3', index:'a.type3', width:100, align:"center", frozen:true},
+		{header:'${text("类型4")}', name:'type4', index:'a.type4', width:100, align:"center", frozen:true},
+		{header:'${text("你属于")}', name:'belongTo', index:'a.belong_to', width:200, align:"left"},
+		{header:'${text("操作")}', name:'actions', width:100, sortable:false, title:false, formatter: function(val, obj, row, act){
+				var actions = [];
+			<% if(hasPermi('yde:ydeQuestion:edit')){ %>
+					actions.push('<a href="javascript:void(0)" onclick="addAnalysisGroup(' + row.id + ')"><i class="fa fa-pencil"></i></a>&nbsp;');
+					actions.push('<a href="javascript:void(0)" onclick="removeAnalysisGrp(' + row.id + ')" title="${text("删除")}" data-confirm="${text("确认要删除该这个分析？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				<% } %>
+				return actions.join('');
+			}}
+	],
+	rownumbers: false,
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+	}
+});
+</script>

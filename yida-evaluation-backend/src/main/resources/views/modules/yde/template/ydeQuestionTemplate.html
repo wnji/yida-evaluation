@@ -1,0 +1,34 @@
+<div id="option-type-tpl" style="display: none;">
+    <div style="border: 1px dotted lightgrey; padding: 10px 0px">
+        <div class="option-close hide"><a onclick="closeOption(this);"><i class="icon-close"></i></a></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" title="">
+                        <strong class="option-name">${text('选项A')}：</strong></label>
+                    <div class="col-sm-2">
+                        <#form:input id="optionPoints_tpl" name="optionPoints_name" maxlength="11" placeholder="请输入分值"
+                        class="form-control digits"/>
+                    </div>
+                    <div class="col-sm-1 top-bottom-5">
+                        分
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <span class="col-sm-2"></span>
+                    <div class="col-sm-8">
+                        <#form:ueditor path="optionContent_tpl" maxlength="10000" height="60" class=""
+                        miniToolbars="true" readonly="false" outline="false"/>
+                    </div>
+                    <span class="col-sm-2 btn-option-add">
+						<a onclick="addOption();"><i class="fa fa-plus" style="font-size: 30px"></i></a>
+					</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

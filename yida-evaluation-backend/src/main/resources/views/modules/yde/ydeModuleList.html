@@ -1,0 +1,55 @@
+<% layout('/layouts/default.html', {title: '测评模块管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="nav-link" href="${ctx}/yde/ydeEvaluation/list">测评设置</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active">测评模块</a>
+				</li>
+			</ul>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${ydeModule}" action="${ctx}/yde/ydeModule/listData" method="post" class="form-inline"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			</#form:form>
+			<div class="box-tools pull-left" style="margin: 10px 0;">
+				<% if(hasPermi('yde:ydeModule:edit')){ %>
+				<a href="${ctx}/yde/ydeModule/form" class="btn btn-default btnTool" title="${text('新增测评模块')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("测评模块")}', name:'name', index:'a.name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/yde/ydeModule/form?id='+row.id+'" class="btnList" data-title="${text("编辑测评模块")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("开始时间")}', name:'startTime', index:'a.start_time', width:150, align:"center"},
+		{header:'${text("结束时间")}', name:'endTime', index:'a.end_time', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('yde:ydeModule:edit')){ %>
+				actions.push('<a href="${ctx}/yde/ydeModule/form?id='+row.id+'" class="btnList" title="${text("编辑测评模块")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/yde/ydeModule/delete?id='+row.id+'" class="btnList" title="${text("删除测评模块")}" data-confirm="${text("确认要删除该测评模块吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+    rownumbers: false,
+    multiselect: true,
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

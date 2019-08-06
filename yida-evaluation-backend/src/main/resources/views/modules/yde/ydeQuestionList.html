@@ -1,0 +1,59 @@
+<% layout('/layouts/default.html', {title: '题目设置管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('题目设置管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('yde:ydeQuestion:edit')){ %>
+					<a href="${ctx}/yde/ydeQuestion/form" class="btn btn-default btnTool" title="${text('新增题目设置')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+					<a href="#" onclick="batchDelete();" class="btn btn-default"><i class="fa fa-trash"></i> 批量删除</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${ydeQuestion}" action="${ctx}/yde/ydeQuestion/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("ID")}', name:'id', index:'a.id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/yde/ydeQuestion/form?id='+row.id+'" class="btnList" data-title="${text("编辑题目设置")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("题目")}', name:'title', index:'a.title', width:150, align:"left"},
+		{header:'${text("测评ID")}', name:'evaluationId', index:'a.evaluation_id', width:150, align:"center"},
+		{header:'${text("所属部分")}', name:'partId', index:'a.part_id', width:150, align:"center"},
+		{header:'${text("题号")}', name:'no', index:'a.no', width:150, align:"center"},
+		{header:'${text("选项类型")}', name:'optionType', index:'a.option_type', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('yde:ydeQuestion:edit')){ %>
+				actions.push('<a href="${ctx}/yde/ydeQuestion/form?id='+row.id+'" class="btnList" title="${text("编辑题目设置")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/yde/ydeQuestion/delete?id='+row.id+'" class="btnList" title="${text("删除题目设置")}" data-confirm="${text("确认要删除该题目设置吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+    rownumbers: false,
+    multiselect: true,
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

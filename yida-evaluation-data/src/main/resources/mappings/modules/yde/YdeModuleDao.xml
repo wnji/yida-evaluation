@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yida.modules.yde.dao.YdeModuleDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="YdeModule">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+	<update id="setEvaluationEnable">
+		update yde_evaluation
+		set is_enabled=#{isEnabled}
+		where module_id=#{moduleId}
+		<if test="evaluationIds!=null">
+			and id in 
+			<foreach collection="evaluationIds" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</update>
+</mapper>

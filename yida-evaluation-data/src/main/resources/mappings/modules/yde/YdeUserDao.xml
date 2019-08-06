@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yida.modules.yde.dao.YdeUserDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="YdeUser">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+	<select id="findEvaluationReports" resultMap="evaluationReportResultMap">
+		select
+          a.id as evaluation_id,
+          a.name as evaluation_name,
+          a.module_id as module_id,
+          c.id as rpt_id,
+          c.title as rpt_title,
+          c.score as rpt_score,
+          c.total_score as rpt_total_score,
+          c.report_type as rpt_report_type,
+          c.type_content as rpt_type_content,
+          c.report_content as rpt_report_content,
+          c.box_content as rpt_box_content
+          from yde_evaluation a
+          LEFT OUTER JOIN yde_evaluation_record b on a.id = b.evaluation_id  and b.is_last_evaluation and b.user_id = #{userId}
+          left outer join yde_report c on b.report_id = c.id where a.is_enabled
+	</select>
+
+	<resultMap type="com.yida.modules.yde.entity.YdeEvaluationReport" id="evaluationReportResultMap">
+		<association property="evaluation" resultMap="evaluationResultMap"/>
+		<association property="report" resultMap="reportResultMap"/>
+	</resultMap>
+
+	<resultMap type="YdeEvaluation" id="evaluationResultMap">
+		<id column="evaluation_id" property="id" />
+		<result column="evaluation_name" property="name" />
+		<result column="module_id" property="moduleId" />
+	</resultMap>
+
+	<resultMap type="YdeReport" id="reportResultMap">
+		<id column="rpt_id" property="id" />
+		<result column="rpt_title" property="title" />
+
+		<result column="rpt_score" property="score" />
+		<result column="rpt_total_score" property="totalScore" />
+		<result column="rpt_report_type" property="reportType" />
+		<result column="rpt_type_content" property="typeContent" />
+		<result column="rpt_report_content" property="reportContent" />
+		<result column="rpt_box_content" property="boxContent" />
+	</resultMap>
+
+    <select id="selectByUserNo" resultType="YdeUser">
+        select * from yde_user where yida_user_no=#{yidaUserNo}
+    </select>
+
+</mapper>

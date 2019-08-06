@@ -1,0 +1,112 @@
+<% layout('/layouts/default.html', {title: '测评设置管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="nav-link active">测评设置</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="${ctx}/yde/ydeModule/list">测评模块</a>
+				</li>
+			</ul>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${ydeEvaluation}" action="${ctx}/yde/ydeEvaluation/listData" method="post" class="form-inline"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('测评名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="name" placeholder="请输入测评名称" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('所属模块')}：</label>
+					<div class="control-inline width-160">
+						<#form:select path="moduleId" items="${modules}" itemValue="id" itemLabel="name"
+						blankOption="true" blankOptionLabel="请选择所属模块" class="form-control width-160"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+				<div class="form-group" style="margin-left: 30px">
+					<a id="enable" class="btn-primary btn-sm">${text('激活')}</a>
+					<a id="disable" class="btn-default btn-sm">${text('冻结')}</a>
+				</div>
+				<div class="box-tools pull-right">
+					<% if(hasPermi('yde:ydeEvaluation:edit')){ %>
+					<a href="${ctx}/yde/ydeEvaluation/form" class="btn btn-default btnTool" title="${text('新增测评设置')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+					<% } %>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("测评名称")}', name:'name', index:'a.name', width:150, align:"left", formatter: function(val, obj, row, act){
+				return '<a href="${ctx}/yde/ydeEvaluation/form?id='+row.id+'" class="btnList" data-title="${text("' + val +'")}">'+(val||row.id)+'</a>';
+			}},
+		{header:'${text("图标")}', name:'icon', index:'a.icon', width:50, align:"center", formatter: function(val, obj, row, act){
+				return '<i class="' +  val +'"></i>';
+			}},
+		{header:'${text("所属测评模块")}', name:'moduleName', index:'a.module_name', width:150, align:"center"},
+		{header:'${text("测评题数")}', name:'questionCount', index:'a.question_count', width:150, align:"center"},
+		{header:'${text("时长(分)")}', name:'duration', index:'a.duration', width:150, align:"center"},
+		{header:'${text("限定次数")}', name: 'limitedOnce', index:'a.is_limited_once', width:150, align:"center", formatter: function(val, obj, row, act){
+				return val == "1" ? "是" : "否";
+			}},
+		{header:'${text("状态")}', name:'enabled', index:'a.is_enabled', width:150, align:"center", formatter: function(val, obj, row, act){
+				return '<span>' + js.getDictLabel(${@DictUtils.getDictListJson('yde_enable_disable')}, val, '${text("未知")}', true)+'</span>';
+			}},
+		{header:'${text("操作")}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('yde:ydeEvaluation:edit')){ %>
+				actions.push('<a href="${ctx}/yde/ydeEvaluation/form?id='+row.id+'" class="btnList" title="${text("编辑测评设置")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/yde/ydeEvaluation/delete?id='+row.id+'" class="btnList" title="${text("删除测评设置")}" data-confirm="${text("确认要删除该测评设置吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+    rownumbers: false,
+    multiselect: true,
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+$("#enable").click(function () {
+	if ($('#dataGrid tr[role=row][aria-selected=true]').length > 0) {
+		let ids = "";
+		$('#dataGrid tr[role=row][aria-selected=true]').each(function () {
+			ids += this.id + ",";
+		});
+		ids = ids.substring(0, ids.length-1);
+		ajaxRequest('POST', 'enable', {'ids': ids}, "激活");
+	} else {
+		js.showMessage("没有选中的数据！", "提醒", "warning");
+	}
+});
+
+$("#disable").click(function () {
+	if ($('#dataGrid tr[role=row][aria-selected=true]').length > 0) {
+		let ids = "";
+		$('#dataGrid tr[role=row][aria-selected=true]').each(function () {
+			ids += this.id + ",";
+		});
+		ids = ids.substring(0, ids.length-1);
+		ajaxRequest('POST', 'disable', {'ids': ids}, "冻结");
+	} else {
+		js.showMessage("没有选中的数据！", "提醒", "warning");
+	}
+})
+</script>

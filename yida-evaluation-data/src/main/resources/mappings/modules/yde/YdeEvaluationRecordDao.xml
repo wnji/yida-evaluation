@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yida.modules.yde.dao.YdeEvaluationRecordDao">
+
+    <!-- 查询数据
+    <select id="findList" resultType="YdeEvaluationRecord">
+        SELECT ${sqlMap.column.toSql()}
+        FROM ${sqlMap.table.toSql()}
+        <where>
+            ${sqlMap.where.toSql()}
+        </where>
+        ORDER BY ${sqlMap.order.toSql()}
+    </select> -->
+
+    <select id="findReportsByEvaluationRecord" resultType="com.yida.modules.yde.entity.YdeReport">
+		SELECT r.id, r.report_type, r.score, r.report_content, r.box_content, r.total_score, r.title, r.status, r.update_by, r.update_date, r.remarks, r.create_date, r.create_by
+		FROM yde_evaluation_record er, yde_report r
+		WHERE er.report_id = r.id and er.evaluation_id = #{evaluationId} and er.user_id = #{userId}
+
+    </select>
+
+    <select id="countEvaluationByUser" resultType="int">
+        SELECT count(id) from yde_evaluation_record where user_id=#{userId}
+    </select>
+
+    <select id="findEvaluationCountsByUserId" resultType="com.yida.modules.yde.dto.YdeEvaluationCount">
+        SELECT e.id as evaluationId, e.name as evaluationName, count(er.report_id) as count
+        from yde_evaluation e
+        left outer join yde_evaluation_record er on e.id = er.evaluation_id and er.user_id = #{userId}
+        where e.status = 0 and e.is_enabled = 1
+        group by e.id
+    </select>
+
+    <select id="findLastReports" resultType="com.yida.modules.yde.entity.YdeReport">
+        SELECT r.id, r.report_type, r.report_content, r.type_content, r.box_content, r.title, r.score, r.total_score, r.box_content, er.evaluation_id as "ydeEvaluationRecord.evaluationId", r2.id as "ydeRule.id"
+        from yde_report r,
+             yde_evaluation e,
+             yde_evaluation_record er,
+             yde_rule r2
+        where r.id = er.report_id
+          and er.user_id = #{userId}
+          and er.is_last_evaluation = 1
+          and er.evaluation_id = e.id
+          and er.evaluation_id = r2.evaluation_id
+          and e.status = 0
+          and e.is_enabled = 1
+    </select>
+</mapper>

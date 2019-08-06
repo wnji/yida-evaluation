@@ -1,0 +1,174 @@
+<% layout('/layouts/default.html', {title: '测评模块管理', libs: ['validate', 'ueditor']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(ydeModule.isNewRecord ? '新增测评模块' : '编辑测评模块')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${ydeModule}" action="${ctx}/yde/ydeModule/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('测评模块')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+                                <#form:hidden path="id" />
+								<#form:input path="name" maxlength="100" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('开始时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="startTime" readonly="true" maxlength="20" class="form-control Wdate"
+									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('结束时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="endTime" readonly="true" maxlength="20" class="form-control Wdate"
+									dataFormat="datetime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('测评套题限制')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<% if(ydeModule.isEvaluationLimited){%>
+								<input type ="radio" value="true" name="isEvaluationLimited"  onclick="showEvaluations()"  checked />限制 &nbsp;&nbsp;
+								<input type ="radio" value="false"  name="isEvaluationLimited"  onclick="showEvaluations()"  />不限制
+								<%}else{%>
+								<input type ="radio" value="true" name="isEvaluationLimited" onclick="showEvaluations()"    />限制 &nbsp;&nbsp;
+								<input type ="radio" value="false"  name="isEvaluationLimited" onclick="showEvaluations()"  checked/>不限制
+								<%}%>
+							</div>
+						</div>
+
+						<%if(activeEvaluations.~size<1){%>
+						<div class="form-group" id="evaluationDiv-1" >
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide" aria-required="true"></span> <i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<select  name="evaluation">
+									<option>请选择测评名称</option>
+									<%for(opt in evaluations){
+									%>
+									<option value="${opt.id}" >${opt.name}</option>
+									<%  }%>
+								</select>&nbsp;&nbsp;<span class="fa fa-plus" onclick='addEvaluation($(this).parent().parent())'></span>&nbsp;&nbsp;<span class="fa fa-times" onclick='removeEvaluation($(this).parent().parent())'></span>
+							</div>
+						</div>
+
+						<%}else{
+						for(activeEvaluation in activeEvaluations){
+						%>
+						<div class="form-group" id="evaluationDiv-${activeEvaluation.id}">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide" aria-required="true"></span> <i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<select  name="evaluation">
+									<option>请选择测评名称</option>
+
+									<%for(opt in evaluations){
+									if(activeEvaluation.id==opt.id){
+									%>
+									<option value="${opt.id}" selected>${opt.name}</option>
+									<%  } else{%>
+									<option value="${opt.id}" >${opt.name}</option>
+									<%
+									}
+									}
+									%>
+
+								</select>&nbsp;&nbsp;<span class="fa fa-plus" onclick='addEvaluation($(this).parent().parent())'></span>&nbsp;&nbsp;<span class="fa fa-times" onclick='removeEvaluation($(this).parent().parent())'></span>
+							</div>
+						</div>
+
+						<%
+						}
+						}
+						%>
+
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('测评模块介绍')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:ueditor path="introduction" maxlength="10000" height="200" class=""
+								simpleToolbars="true" readonly="false" outline="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('yde:ydeModule:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+
+$(document).ready(function () {
+    showEvaluations();
+});
+
+function showEvaluations(){
+    var isEvaluationLimited = $(':radio[name="isEvaluationLimited"]:checked').val();
+    if(isEvaluationLimited=="true"){
+        $("[id|='evaluationDiv']").show();
+	}
+	else {
+        $("[id|='evaluationDiv']").hide();
+	}
+}
+
+function addEvaluation(src){
+    var newEvaluation = $(src).clone();
+
+    $(src).after(newEvaluation);
+}
+
+function removeEvaluation(src){
+    $(src).remove();
+}
+
+</script>

@@ -1,0 +1,168 @@
+/*!
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ * 项目自定义的公共CSS，可覆盖jeesite.css里的样式
+ */
+
+.top-bottom-5 {
+    margin: 5px 0;
+}
+
+.wizard-text {
+    z-index: 999;
+    color: white;
+    position: relative;
+    text-align: center;
+    margin: 7px auto;
+}
+
+.wizard-box {
+    display: block;
+    position: absolute;
+    width: 200px;
+}
+
+.wizard-box-white {
+    left: -175px;
+}
+
+@media only screen and (min-width: 800px) {
+    .wizard {
+        display: block;
+        max-width: 1024px;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .wizard {
+        display: none;
+    }
+}
+
+.wrapping-cell {
+    white-space: normal !important;
+}
+
+.option-close {
+    float: right;
+    margin: 0px 10px;
+}
+
+.btn-option-add {
+    display: none;
+}
+
+.option-type-box:last-of-type .btn-option-add {
+    display: block;
+}
+
+.grey-text {
+    color: grey;
+}
+
+.btn-add-score {
+    display: none;
+}
+
+.score-box:last-of-type .btn-add-score {
+    display: block;
+}
+
+.score-box:first-of-type .icon-close,
+.group-box .score-box:nth-of-type(2) .icon-close,
+.group-box .score-box:nth-of-type(3) .icon-close {
+    display: none;
+}
+
+.group-box {
+    border: grey dotted 1px;
+    padding: 10px;
+    display: inline-block;
+    width: 80%;
+}
+
+.group-box:first-of-type {
+    border: none;
+}
+
+.group-box:first-of-type .close-group {
+    display: none;
+}
+
+.close-group {
+    float: right;
+    display: block;
+}
+
+
+.btn-add-result {
+    float: right;
+    position: relative;
+    top: -202px;
+    right: -43px;
+    font-size: 20px;
+}
+
+
+.group-analysis {
+    border: lightgray dotted 1px;
+    padding: 10px;
+    margin: 0px 75px 30px 0;
+    width: 400px;
+}
+
+.btn-add-result {
+    display: none;
+}
+
+.group-analysis:last-of-type .btn-add-result {
+    display: block;
+}
+
+.close-analysis-group {
+    float: right;
+}
+
+.edui-textarea {
+    display: none;
+}
+
+.charts img {
+    max-width: 200px;
+    max-height: 150px;
+}
+
+.type-box {
+    padding: 0 0 0 15px;
+    width: 19%;
+    display: inline-block;
+}
+
+.part-box {
+    padding: 10px;
+    border: grey dotted 1px;
+    max-width: 650px;
+}
+
+.btn-add-part {
+    display: none;
+    font-size: 30px;
+    top: 100px;
+    position: relative;
+}
+
+#part-group .part-box:first-of-type {
+    border: none;
+}
+
+#part-group .part-box:last-of-type .btn-add-part {
+    display: block;
+}
+
+
+.nav-tabs > li > a.active {
+    border-bottom: #3c8dbc solid 3px;
+}
+
+a.btn-sm:hover {
+    cursor: pointer;
+}

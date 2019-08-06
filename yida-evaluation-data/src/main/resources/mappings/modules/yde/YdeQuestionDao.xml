@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yida.modules.yde.dao.YdeQuestionDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="YdeQuestion">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+    <select id="findListWithOption" resultType="com.yida.modules.yde.dto.YdeQuestionOption">
+        SELECT q.id as questionId, q.no, q.question, p.section, q.option_type, q.points as totalPoints, q.answer, o.content as optionContent, o.option_name as optionName, o.points
+		FROM yde_question q
+		LEFT JOIN yde_option o
+		ON q.id = o.question_id
+		LEFT JOIN yde_part p
+				  ON p.id = q.part_id
+		WHERE q.evaluation_id = #{evaluationId} and q.status = #{status}
+    </select>
+</mapper>

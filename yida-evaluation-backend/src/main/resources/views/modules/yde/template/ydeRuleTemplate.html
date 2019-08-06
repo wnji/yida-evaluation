@@ -1,0 +1,249 @@
+<div class="tab-pane ${step == '3' ? 'active' : ''}" id="tab-3">
+    <input type="hidden" name="ruleJson">
+    <input type="hidden" name="analysisJson">
+    <input type="hidden" name="partsJson">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" title="">
+                        <span class="required hide">*</span> <strong>${text('规则类型')}：</strong><i class="fa icon-question hide"></i></label>
+                    <div class="col-sm-8">
+                        <#form:radio path="ruleType" dictType="yde_rule_type" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" title="">
+                        <span class="required hide">*</span> <strong>${text('分值来源')}：</strong><i class="fa icon-question hide"></i></label>
+                    <div class="col-sm-8">
+                        <#form:radio path="pointsSource" dictType="yde_points_source" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rule-type-score-sum" style="display: none;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> <strong>${text('评分规则')}：</strong><i class="fa icon-question hide"></i></label>
+                        <span class="col-sm-10 grey-text">（注：系统自动把得分叠加，若得出的分值在设定的规则范围内，则显示该结果类型）</span>
+                    </div>
+                </div>
+            </div>
+            <div id="score-range"></div>
+        </div>
+        <div class="row rule-type-group-sum" style="display: none;">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" title="">
+                        <span class="required hide">*</span> <strong>${text('统计方法')}：</strong><i class="fa icon-question hide"></i></label>
+                    <div class="col-sm-8">
+                        <#form:radio path="statisticsMethod" dictType="yde_statistics_method" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rule-type-group-sum" style="display: none;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> <strong>${text('评分规则')}：</strong><i class="fa icon-question hide"></i></label>
+                        <span class="col-sm-6 grey-text">（注：系统自动选出类型题号相关的选项中，相加分值最高的1项或2-3项组合）</span>
+                        <div class="col-sm-4"><a class="btn btn-primary" onclick="addGroup()">${text('组合添加')}</a></div>
+                    </div>
+                </div>
+            </div>
+            <div id="type-range"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" title="">
+                        <span class="required hide">*</span> <strong>${text('结果展现')}：</strong><i class="fa icon-question hide"></i></label>
+                    <span class="col-sm-10 grey-text"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <span class="col-sm-1"></span>
+                    <div class="col-sm-2">
+                        <#form:radio path="reportType" separator="<br>" dictType="yde_report_type" class="form-control"/>
+                    </div>
+                    <div class="col-sm-4 charts">
+                        <img id="piechart" style="display: none" src="${ctxStatic}/images/piechart.png">
+                        <img id="radarchart" style="display: none" src="${ctxStatic}/images/radarchart.png">
+                        <img id="dashboard" style="display: none"src="${ctxStatic}/images/dashboard.png">
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rule-type-score-sum" style="display: none;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> <strong>${text('结果分析')}：</strong><i class="fa icon-question hide"></i></label>
+                        <div class="col-sm-6">
+                            <#form:ueditor path="result" maxlength="10000" height="200" class=""
+                            miniToolbars="true" readonly="false" outline="false"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rule-type-group-sum" style="display: none;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" title="">
+                            <span class="required hide">*</span> <strong>${text('结果分析')}：</strong><i class="fa icon-question hide"></i></label>
+                        <div class="col-sm-10"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <span class="col-sm-10"></span>
+                        <div class="col-sm-2"><a class="btn btn-primary" onclick="addAnalysisGroup()">${text('添加分析')}</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <span class="col-sm-1"></span>
+                        <div class="col-sm-11">
+                            <table width="100%" id="analysisGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="score-range-tpl" style="display: none;">
+    <div class="row score-range-row" rule-id="">
+        <div class="col-xs-10">
+            <div class="form-group">
+                <span class="col-sm-2 top-bottom-5" style="text-align: right"><i onclick="removeScore(this);" class="icon-close"></i></span>
+                <div class="col-sm-1">
+                    <#form:input name="scoreFrom" maxlength="6" placeholder="分值" class="form-control digits"/>
+                </div>
+                <div class="col-sm-1 top-bottom-5" style="width: 15px; padding: 0px; text-align: center">-</div>
+                <div class="col-sm-1">
+                    <#form:input name="scoreTo" maxlength="6" placeholder="分值" class="form-control digits"/>
+                </div>
+                <div class="col-sm-5">
+                    <#form:input name="typeContent" maxlength="2048" placeholder="请输入规则内容" class="form-control"/>
+                </div>
+                <span class="col-sm-1 top-bottom-5 btn-add-score"><a onclick="addScoreRule();"><i class="fa fa-plus"></i></a></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="type-range-tpl" style="display: none;">
+    <div class="row type-range-row">
+        <div class="col-xs-11">
+            <div class="form-group">
+                <span class="col-sm-2 top-bottom-5" style="text-align: right"><i onclick="removeScore(this);" class="icon-close"></i></span>
+                <div class="col-sm-2">
+                    <#form:input name="type" maxlength="6" placeholder="请输入类型" class="form-control"/>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" name="questionNo" placeholder="请输入题号"  class="form-control hide tagsinput"/>
+                </div>
+                <div class="col-sm-2 top-bottom-5 option-name"></div>
+                <span class="col-sm-1 top-bottom-5 btn-add-score"><a onclick="addTypeRule(#groupNo);"><i class="fa fa-plus"></i></a></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="part-box-tpl" style="display: none;">
+    <div class="row" style="margin: 0 15px 0 -15px;">
+        <input type="hidden" name="part_id_#part_box_no#">
+        <span class="top-bottom-5" style="position: absolute; left: 600px;z-index: 100"><i onclick="removePart(this);" class="icon-close"></i></span>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label col-sm-3" title="">
+                    <strong>${text('第#part_box_no#部分')}：</strong></label>
+                <div class="col-sm-8" style="margin-right: 0;">
+                    <#form:ueditor id="part_box_tpl" name="part_box_tpl" maxlength="10000" height="200"
+                    miniToolbars="true" readonly="false" outline="false"/>
+                </div>
+                <div class="col-sm-1">
+                    <a class="btn-add-part" onclick="addPart(#next_part_box_no#)"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="group-analysis-tpl" style="display: none;">
+
+    <div class="row" style="margin-right: 0;">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label col-sm-2" title="">
+                    <strong>${text('结果')}</strong><i class="fa icon-question hide"></i>
+                </label>
+                <input type="hidden" id="ruleId" name="ruleId">
+                <div class="type-box">
+                    <#form:input name="type1" placeholder="类型" class="form-control"/>
+                </div>
+                <div class="type-box">
+                    <#form:input name="type2" placeholder="类型" class="form-control"/>
+                </div>
+                <div class="type-box">
+                    <#form:input name="type3" placeholder="类型" class="form-control"/>
+                </div>
+                <div class="type-box">
+                    <#form:input name="type4" placeholder="类型" class="form-control"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row belongTo" style="margin-right: 0;">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label col-sm-2" title="">
+                    <strong>${text('你属于')}</strong>
+                </label>
+                <div class="col-sm-10">
+                    <#form:input name="belongTo" placeholder="请输入关键字内容" class="form-control"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="analysis_editor" style="display: none;">
+    <div class="row" style="margin-right: 0;margin-top: 15px; ">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label col-sm-2" title="">
+                    <strong>${text('分析')}</strong>
+                </label>
+                <div class="col-sm-10">
+                    <#form:ueditor id="analysis_tpl" name="analysis_tpl" maxlength="10000" height="200"
+                    miniToolbars="true" readonly="false" outline="false"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

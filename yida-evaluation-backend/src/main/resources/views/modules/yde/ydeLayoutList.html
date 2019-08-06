@@ -1,0 +1,823 @@
+<% layout('/layouts/default.html', {title: '展示模式管理', libs: ['validate', 'dataGrid']}){ %>
+<div class="main-content">
+    <div class="box box-main">
+        <div class="box-header">
+            <div class="box-title">
+                <i class="fa fa-list-alt"></i> ${text('展示模式设置')}
+            </div>
+            <div class="box-tools pull-right">
+
+            </div>
+        </div>
+
+        <#form:form id="inputForm" model="${ydeLayout}" action="${ctx}/yde/ydeLayout/save" method="post" class="form-horizontal">
+        <#form:hidden path="id" />
+        <#form:hidden path="layoutType" />
+        <div class="box-body">
+
+            选版设置
+            <div class="row row-4-select">
+                <img id="imgLayout4" src="${ctxStatic}/images/layout-4.png"
+                     class="col-sm-2 img-select img-select-normal" onclick="selectLayout(4);">
+                <img id="imgLayout5" src="${ctxStatic}/images/layout-5.png"
+                     class="col-sm-2 img-select img-select-normal" onclick="selectLayout(5);">
+                <img id="imgLayout6" src="${ctxStatic}/images/layout-6.png"
+                     class="col-sm-2 img-select img-select-normal" onclick="selectLayout(6);">
+                <img id="imgLayout7" src="${ctxStatic}/images/layout-7.png"
+                     class="col-sm-2 img-select img-select-normal" onclick="selectLayout(7);">
+                <img id="imgLayout8" src="${ctxStatic}/images/layout-8.png" class="col-sm-2 img-select img-select-last" onclick="selectLayout(8);">
+
+                <div class="col-sm-2">
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="row">
+
+                        <div class="col-sm-6 module-select" id="evlModule1">
+                            <span class="index">1</span>
+                            <select name="evlModule"  id="evlModuleSel1">
+                                <option value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                  if(selectedModules[0]==parseInt(opt.id)){
+                                %>
+                                     <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                   else{%>
+                                     <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                   }
+                                }%>
+
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule2">
+                            <span class="index">2</span>
+                            <select name="evlModule" id="evlModuleSel2">
+                                <option value="0">请选择测评模块</option>
+
+                                <%for(opt in moduleList){
+
+
+                                if(selectedModules[1]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule3">
+                            <span class="index">3</span>
+                            <select name="evlModule" id="evlModuleSel3">
+                                <option value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                if(selectedModules[2]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule4">
+                            <span class="index">4</span>
+                            <select name="evlModule" id="evlModuleSel4">
+                                <option  value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                if(selectedModules[3]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule5">
+                            <span class="index">5</span>
+                            <select name="evlModule" id="evlModuleSel5">
+                                <option  value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                if(selectedModules[4]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule6">
+                            <span class="index">6</span>
+                            <select name="evlModule" id="evlModuleSel6">
+                                <option  value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                if(selectedModules[5]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule7">
+                            <span class="index">7</span>
+                            <select name="evlModule" id="evlModuleSel7">
+                                <option  value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                if(selectedModules[6]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 module-select" id="evlModule8">
+                            <span class="index">8</span>
+                            <select name="evlModule" id="evlModuleSel8">
+                                <option  value="0">请选择测评模块</option>
+                                <%for(opt in moduleList){
+                                if(selectedModules[7]==parseInt(opt.id)){
+                                %>
+                                <option value="${opt.id}" selected>${opt.name}</option>
+                                <% }
+                                else{%>
+                                <option value="${opt.id}" >${opt.name}</option>
+                                <%
+                                }
+                                }%>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div id="boxShow1" class="box-show">
+
+                        <div class="layout-1-1">1</div>
+
+                        <div class="layout-1-2">2</div>
+
+
+                        <div class="layout-1-3">3</div>
+                        <div class="layout-1-4">4</div>
+                    </div>
+
+                    <div id="boxShow2" class="box-show">
+
+                        <div class="layout-2-1">1</div>
+                        <div class="layout-2-2">2</div>
+                        <div class="layout-2-3">3</div>
+                        <div class="layout-2-4">4</div>
+                        <div class="layout-2-5">5</div>
+                    </div>
+
+                    <div id="boxShow3" class="box-show">
+                        <div class="layout-3-1">1</div>
+                        <div class="layout-3-2">2</div>
+                        <div class="layout-3-3">3</div>
+                        <div class="layout-3-4">4</div>
+                        <div class="layout-3-5">5</div>
+                        <div class="layout-3-6">6</div>
+                    </div>
+
+                    <div id="boxShow4" class="box-show">
+                        <div class="layout-4-1">1</div>
+                        <div class="layout-4-2">2</div>
+                        <div class="layout-4-3">3</div>
+                        <div class="layout-4-4">4</div>
+                        <div class="layout-4-5">5</div>
+                        <div class="layout-4-6">6</div>
+                        <div class="layout-4-7">7</div>
+                    </div>
+
+                    <div id="boxShow5" class="box-show">
+                        <div class="layout-5-1">1</div>
+                        <div class="layout-5-2">2</div>
+                        <div class="layout-5-3">3</div>
+                        <div class="layout-5-4">4</div>
+                        <div class="layout-5-5">5</div>
+                        <div class="layout-5-6">6</div>
+                        <div class="layout-5-7">7</div>
+                        <div class="layout-5-8">8</div>
+                    </div>
+
+                    <div style="text-align:center; margin-top:2px;width:450px;">模板展示</div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        <div class="box-footer">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <% if (hasPermi('yde:ydeLayout:edit')){ %>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+                    <% } %>
+                    <button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+                </div>
+            </div>
+        </div>
+
+       </#form:form>
+
+    </div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+     submitHandler: function(form){
+         if(!checkInput()){
+           return false;
+         }
+
+         js.ajaxSubmitForm($(form), function(data){
+             js.showMessage(data.message);
+
+         }, "json");
+     }
+});
+
+$(document).ready(function(){
+    var layoutType = ${ydeLayout.layoutType};
+
+    selectLayout(layoutType);
+});
+
+function selectLayout(layoutType){
+  var boxShowId = "boxShow";
+
+   $("#layoutType").val(layoutType);
+
+  for(var i = 1; i<= 5; i++){
+      var index = i + 3;
+      var theId = boxShowId + i;
+      if(index==layoutType){
+          $("[id|=" + theId + "]").show();
+      }
+      else{
+          $("[id|=" + theId + "]").hide();
+      }
+  }
+
+   var evlModule1Id="evlModule";
+   for(var i = 1; i<= 8; i++){
+       var theId = evlModule1Id + i;
+       if(i<=layoutType){
+           $("[id|=" + theId + "]").show();
+       }
+       else{
+           $("[id|=" + theId + "]").hide();
+       }
+   }
+}
+
+function checkInput(){
+    var layoutType = $("#layoutType").val();
+    var evlModuleSelId="evlModuleSel";
+    for(var i = 1; i<= 8; i++){
+        var theId = evlModuleSelId + i;
+        if(i<=layoutType){
+            if($("[id|=" + theId + "]").val()==0){
+                js.showErrorMessage("请选择展示模块" + i, "warning");
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+</script>
+
+<style>
+    .row-4-select {
+        margin-left: 2px !important;
+    }
+
+    .img-select {
+        /*width: 186px;*/
+        height: 145px;
+
+        border-style: solid;
+        padding: 2px;
+        border-color: #CCCCCC;
+        cursor: grab;
+    }
+
+    .img-select-normal {
+        border-width: 3px 0px 3px 3px;
+    }
+
+    .img-select-last {
+        border-width: 3px;
+    }
+
+    .module-select{
+        margin-bottom: 10px;
+    }
+
+    .index {
+        width: 15px;
+        height: 15px;
+        border: 2px solid #000000;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+    }
+
+    select {
+        width: 216px;
+        margin-left: 4px;
+    }
+
+    .box-show {
+        border: 1px solid #CCCCCC;
+        margin-left: 15px;
+        padding-bottom: 8px;
+        padding-top: 8px;
+
+        height: 345px;
+        width: 370px;
+    }
+
+    .layout-1-1 {
+        width: 155px;
+        height: 71px;
+        background-color: #0099FF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 71px;
+        overflow: hidden;
+        position: absolute;
+        left: 61px;
+        top:30px;
+    }
+
+    .layout-1-2 {
+        width: 155px;
+        height: 135px;
+        background-color: #FF6633;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 135px;
+        overflow: hidden;
+        position: absolute;
+        left: 61px;
+        top:113px;
+    }
+
+    .layout-1-3 {
+        width: 139px;
+        height: 220px;
+        background-color: #99CC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 220px;
+        overflow: hidden;
+        position: absolute;
+        left: 233px;
+        top:30px;
+    }
+
+    .layout-1-4 {
+        width: 312px;
+        height: 56px;
+        background-color: #FFCC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 56px;
+        overflow: hidden;
+        position: absolute;
+        left: 61px;
+        top:260px;
+    }
+
+    .layout-2-1 {
+        width: 152px;
+        height: 143px;
+        background-color: #0099FF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 145px;
+        overflow: hidden;
+        position: absolute;
+        left: 60px;
+        top:28px;
+    }
+
+    .layout-2-2 {
+        width: 152px;
+        height: 145px;
+        background-color: #FFCC33;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 143px;
+        overflow: hidden;
+        position: absolute;
+        left: 60px;
+        top:178px;
+    }
+
+    .layout-2-3 {
+        width: 145px;
+        height: 95px;
+        background-color: #99CC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 225px;
+        top:28px;
+    }
+
+    .layout-2-4 {
+        width: 145px;
+        height: 95px;
+        background-color: #FF6600;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 225px;
+        top:128px;
+    }
+
+    .layout-2-5 {
+        width: 145px;
+        height: 95px;
+        background-color: #339900;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 225px;
+        top:228px;
+    }
+
+    .layout-3-1 {
+        width: 150px;
+        height: 95px;
+        background-color: #99CC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 60px;
+        top:28px;
+    }
+
+    .layout-3-2 {
+        width: 150px;
+        height: 95px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 220px;
+        top:28px;
+    }
+
+    .layout-3-3 {
+        width: 150px;
+        height: 95px;
+        background-color: #FF6600;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 60px;
+        top:128px;
+    }
+
+    .layout-3-4 {
+        width: 150px;
+        height: 95px;
+        background-color: #FFCC33;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 220px;
+        top:128px;
+    }
+
+    .layout-3-5 {
+        width: 150px;
+        height: 95px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 60px;
+        top:228px;
+    }
+
+    .layout-3-6 {
+        width: 150px;
+        height: 95px;
+        background-color: #339900;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 220px;
+        top:228px;
+    }
+
+    .layout-4-1 {
+        width: 95px;
+        height: 90px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 63px;
+        top:28px;
+    }
+
+    .layout-4-2 {
+        width: 200px;
+        height: 90px;
+        background-color: #99CC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 168px;
+        top:28px;
+    }
+
+    .layout-4-3 {
+        width: 95px;
+        height: 90px;
+        background-color: #99CC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 63px;
+        top:127px;
+    }
+
+    .layout-4-4 {
+        width: 200px;
+        height: 90px;
+        background-color: #CC9933;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 168px;
+        top:127px;
+    }
+
+    .layout-4-5 {
+        width: 95px;
+        height: 90px;
+        background-color: #0099FF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 63px;
+        top:227px;
+    }
+
+    .layout-4-6 {
+        width: 95px;
+        height: 90px;
+        background-color: #FF6600;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 168px;
+        top:227px;
+    }
+
+    .layout-4-7 {
+        width: 95px;
+        height: 90px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 273px;
+        top:227px;
+    }
+
+    .layout-5-1 {
+        width: 98px;
+        height: 92px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 65px;
+        top:28px;
+    }
+
+    .layout-5-2 {
+        width: 98px;
+        height: 92px;
+        background-color: #99CC00;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 168px;
+        top:28px;
+    }
+
+    .layout-5-3 {
+        width: 98px;
+        height: 92px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 272px;
+        top:28px;
+    }
+
+    .layout-5-4 {
+        width: 98px;
+        height: 92px;
+        background-color: #FF6600;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 65px;
+        top:128px;
+    }
+
+    .layout-5-5 {
+        width: 98px;
+        height: 92px;
+        background-color: #CC9933;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 272px;
+        top:128px;
+    }
+
+    .layout-5-6 {
+        width: 98px;
+        height: 92px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 65px;
+        top:226px;
+    }
+
+    .layout-5-7 {
+        width: 98px;
+        height: 92px;
+        background-color: #339900;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 168px;
+        top:226px;
+    }
+
+    .layout-5-8 {
+        width: 98px;
+        height: 92px;
+        background-color: #99CCFF;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 95px;
+        overflow: hidden;
+        position: absolute;
+        left: 272px;
+        top:226px;
+    }
+</style>
