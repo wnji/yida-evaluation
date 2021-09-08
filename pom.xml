@@ -29,7 +29,7 @@
         <yida-evaluation.version>1.0.1-SNAPSHOT</yida-evaluation.version>
         <dashen-framwork.version>1.1.29-SNAPSHOT</dashen-framwork.version>
         <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
-        <dubbo.version>2.7.0</dubbo.version>
+        <dubbo.version>2.7.13</dubbo.version>
     </properties>
 
     <dependencyManagement>
